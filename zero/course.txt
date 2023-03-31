@@ -1,0 +1,50 @@
+What should you do if you can’t finish an assignment before the
+deadline?
+
+I may delay any assignment deadline by 48 hours by submitting a late pass notification 
+form before the original deadline. (There is no need for any other communication in this 
+case.) If I need to extend an assignment deadline more than 48 hours, or if I did not submit 
+a late pass notification in time, I must email the instructor with an initial timeline for
+completing all parts of the assignment and plan for when and how I will report your on progress.
+
+Is it ever acceptable to view another student’s code? If so, under
+what circumstances?
+
+It's only acceptable when you are collaborating with another student and working
+as a team on an assignment.
+
+Is it acceptable for two individuals to write a full code solution
+together on a whiteboard or shared document, then immediately type it
+up in their individual assignment submissions?
+
+No, it's not acceptable.
+
+When is it acceptable for one individual student to offer another
+individual student help understanding an error message?
+
+When the error message is not from an "independent" problem, which requires students 
+to complete independently. 
+
+Give an example of when it is not acceptable to discuss high-level
+strategies for part of an assignment with another student.
+
+When you are working with student A as a team on an assignment but student B 
+who belongs to a different team asks you about a specific problem on the 
+assignment, it's not acceptable because "you must not communicate detailed 
+algorithms, implementations, code, formulae, or other detailed solution steps 
+with other teams."
+
+Why should you run CS 240 code on the CS Linux environment (remotely
+through VS Code/SSH from your computer or directly in the SCI L037 CS
+Systems Lab) instead of installing a C compiler and working with code
+directly on your own computer?
+
+Low-level system details matter in this course. The CS staff guarantees
+support (help with provided tools) and consistency (their grading and your testing 
+use the same environment) only for work in a CS 240 GNU/Linux computing environment.
+
+What is one good next step if compiling or running your code raises an
+error you do not understand?
+
+Try looking it up in the assignment, associated tool documentation, 
+or a web search to understand what the error means.

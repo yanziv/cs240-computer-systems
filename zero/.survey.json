@@ -1,0 +1,10 @@
+[
+    {
+        "prompt": "About how many hours did you spend actively working on account/tool setup and tutorial parts of this assignment?",
+        "type": "float"
+    },
+    {
+        "prompt": "About how many hours did you spend actively working on programming part of this assignment?",
+        "type": "float"
+    }
+]

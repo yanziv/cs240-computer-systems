@@ -1,0 +1,11 @@
+*.bin
+*.o
+*.dSYM
+*~
+*\#*
+.\#*
+.DS_Store
+vgcore.*
+.nfs*
+.vscode
+

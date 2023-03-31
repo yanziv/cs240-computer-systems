@@ -1,0 +1,23 @@
+# This file describes other files that should *not* be
+# tracked by git.
+# Lines prefixed by # are comments.  Empty lines are ignored.
+# Non-comment non-empty lines contain one pattern per line.
+
+# Do not track the compiled executables:
+*.bin
+
+# Do not track any file whose name has ~ as a suffix
+# or uses the '#' character.
+# (Emacs and other editors use such files as backups.)
+*~
+\#*\#
+.\#*
+
+# Ignore build detritus
+*.dSYM
+.DS_Store
+*.o
+
+# VSCode
+.nfs*
+.vscode

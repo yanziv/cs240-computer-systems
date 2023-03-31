@@ -1,0 +1,96 @@
+Write a succinct paragraph or two for each phase, describing:
+- What the phase is computing with your input at a high level of
+  abstraction.
+- Some key features of the x86 code that correspond to the high-level
+  computation.
+
+Describe at a high level as if you are summarizing whatever C code
+compiled to this assembly/machine code.  (Feel free to write C to
+describe what is computed.) Do mention a couple assembly details that
+figure prominently in how the low-level x86 code implements the
+high-level structure, but do not give a line-by-line run-down of the
+assembly code.
+
+Phase 1
+The function first allocates 8 bytes for the stack pointer rsp and store 
+the string "Waban Arches" (stored at 0x402193) into register esi. It then calls the function
+strings_not_equal, which is a function that compares whether
+the input from the user is equivalent to "Waban Arches". Because the user 
+input is stored in %rdi, strings_not_equal compares the user input stored in 
+%rdi with what's stored in %esi (%esi is the lower half of %rsi). If two 
+strings are not equal, it will trigger the alarm and destruct adventure.bin, 
+else, it will store 0x0 into %eax, deallocate stack space, and return %rax. I 
+was able to get the answer string "Waban Arches" by checking what's stored at 
+address 0x402193 because it was loaded into %esi.
+
+Phase 2
+The function first allocates stack space and moves what's stored in %rsp into
+%rsi. It then calls the function read_six_numbers. read_six_numbers takes in 
+a string with 6 numbers and stores those numbers on the stack. 
+"lea    0x4(%rsp),%rbx" first places the address 0x4(%rsp) into %rbx, which means
+that rbx is now pointing to the second number. "lea    0x18(%rsp),%rbp" is placing
+0x18(%rsp) into %rbp, so rbp is now pointing to the the space after the last number
+in memory, it then stores the element that is 4 bytes away from rbx into %eax and
+then add 5 to %eax. It compares %eax to %rbx, if equal, add 4 to %rbx (rbx will
+now point to the next number), if not equal, the alarm will be triggered. We then
+compare %rbx to %rbp, if they are not equal, repeat the process (keep moving rbx and 
+storing new elements into %eax. This is a while loop structure because it will keep
+comparing %rbp to %rbx and the exit condition is when they are equal). Lastly, when 
+%rbp == %rbx, deallocate stack space and return %rax. So the input string consists of
+six numbers and we increment each number by 5 to get the next number.
+
+Phase 3
+In phase 3, a large immediate value is loaded into %esi before the call to sscanf. By 
+running "x /s 0x402749" in gdb, the result "%d %d" tells us that the format of the expected 
+input string should be formatted as 2 strings interpreted as decimals, separated by a space.
+sscanf takes 4 arguments, sscanf(%rdi, %rsi, %rdx, %rcx), and %rdx points to 0xc(%rsp), which 
+is the first number, %rcx points to 0x8(%rsp), which is the second number in our input. Then, 
+the first input number is compared to 0x7, if it's not between 0-7, the alarm will be triggered.
+If the number is between 0-7, we then jump * to a switch jump table, which contains 8 addresses,
+and each address in the jump table corresponds to an input value. Because the first input number
+is later compared to 0x5, and the alarm will be triggered if it's bigger than 5, we choose 5 as our
+first number. After following the assembly code and perform arithmetic operations on $eax, we 
+calculated that the final value of %eax is -0x3ba, which is -954 in decimal, so the desired input 
+string is "5 -954".
+
+Phase 4
+An immediate value is loaded into %esi at the beginning of phase 4, by checking what's stored
+at address 0x40274c, the result "%d" tells us that the desired input is a string interpreted 
+as decimal. In the body of phase 4, sscanf is called, if the input string contains more than
+one number, the alarm will be triggered. Looking at lines <+50> and <+53>, we know that the 
+final value stored in %eax must be 0x31, which is 49 in decimal. So our goal is to find an input
+integer that will result in placing 49 into %eax. Phase 4 contains a recursive function called
+func4. In the body of func4, it first checks whether what's stored at %edi is bigger than 0, if so,
+it recursively moves down the stack pointer and subtract 1 from %edi until %edi == 0. The arithmetic
+operation within func4 is essentially calulating powers of 7. For example, if %edi == 0, output %rdx
+will be 7^0 = 1. Because the desired output is 49, we know that the input integer must be 2.
+
+Phase 5
+Within the body of phase 5, function string_length is called and the result of the function 
+is compared to 6, if the result is not 6, the alarm will be triggered. This tells us that
+the desired input string is 6-character long. Looking at the last few lines of assembly code,
+we can tell that the final value stored in %edx must be 0x29, which is 41 in decimal. From the 
+previous lines of aseembly code, %rdi is stored in %ecx, and in line <+33>, %ecx is ANDded with 
+0xf, which means that only the last four bits of %ecx is preserved. There is a loop within phase_5
+and the loop will only run 6 times (%rax can be viewed as the loop counter, we add 1 to %rax at
+the end of each loop and compare it to 6, if it's less than 6, we iterate again.) %edx is
+altered in line <+36> "add    0x4021e0(,%rcx,4),%edx", so we need to go to address 0x4021e0 
+and pick out 6 values that will add up to 41. The six values I picked were 2,6,9,3,7,14 and their
+corresponding indices(%rcx) were 0,2,6,7,9,10/a. So I looked at the ASCII table and searched for
+six letters with hex values ending in 0,2,6,7,9,a, and the final string I got was "@Bfgi*".
+
+Phase 6
+phase_6 uses a LinkedList structure and contains a function called fun6 which sorts the order
+of the LinkedList in a strictly decreasing order. The input of fun6 is a linked list of 10 
+nodes. Each node takes 16 bytes, the first 8 bytes are the value it stores, and the second 8
+bytes are the address of the next node it points to. After fun6 is run, by running "x /20gx 0x603320",
+we can see the order in which the nodes are sorted. node 0 could be sorted to different positions
+of the linked list depending on the input value you give by setting a breakpoint after fun6.
+The phase_6 function will only execute successfully when after three "mov    0x8(%rax),%rax" operations,
+the node we end up getting is equivalent to node 0. So our desired input value should be the third
+largest element in the linked list. After running fun6, the head of the linked list is node 9 which contains
+hex 3c4, and the next node is node 7, which contains hex 231, and the node after that is node 4, which is 
+hex 214. Our value must be bigger than 532 (hex 214) so that node 0 could be sorted to the third position.
+So 533 would work for phase_6.
+
+

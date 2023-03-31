@@ -1,0 +1,26 @@
+[
+    {
+        "prompt": "About how many hours did you spend actively working on this assignment?",
+        "type": "float"
+    },
+    {
+        "prompt": "About how many hours did you spend actively working on PREP exercises?",
+        "type": "float"
+    },
+    {
+        "prompt": "About how many hours did you spend actively working on an IMPLICIT free list allocator?",
+        "type": "float"
+    },
+    {
+        "prompt": "About how many hours did you spend actively working on an EXPLICIT free list allocator?",
+        "type": "float"
+    },
+    {
+        "prompt": "What was the most challenging part of the assignment?",
+        "type": "str"
+    },
+    {
+        "prompt": "What resources or preparation were most useful for you?",
+        "type": "str"
+    }
+]

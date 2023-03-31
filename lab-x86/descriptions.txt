@@ -1,0 +1,31 @@
+Write a succinct paragraph or two for each phase, describing:
+- What the phase is computing with your input at a high level of
+  abstraction.
+- Some key features of the x86 code that correspond to the high-level
+  computation.
+
+Describe at a high level as if you are summarizing whatever C code
+compiled to this assembly/machine code.  (Feel free to write C to
+describe what is computed.) Do mention a couple assembly details that
+figure prominently in how the low-level x86 code implements the
+high-level structure, but do not give a line-by-line run-down of the
+assembly code.
+
+Phase 1
+
+
+Phase 2
+
+
+Phase 3
+
+
+Phase 4
+
+
+Phase 5
+
+
+Phase 6
+
+

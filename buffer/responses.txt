@@ -1,0 +1,150 @@
+Answer description questions here. Please leave the provided text in
+place and add your answers after each question.
+
+- Many of these questions request only a couple words or an
+  instruction listing from your disassembled code.
+
+- Prose answers should focus on the general meaning of code and data,
+  not only specific numbers or addresses (e.g., "return address", not
+  just "0x4067c5").
+
+
+EXPLOIT 1:
+
+a.  During a successfully exploited execution of the `laptop.bin`, one
+    crucial control-flow instruction is affected by your exploit
+    string data in a way that causes it to choose a different next
+    instruction to execute compared to normal execution (in the
+    absence of buffer overflow), and allow the attack to begin
+    executing different code than usual. What is the instruction
+    address and assembly code for that crucial control-flow
+    instruction in the `laptop.bin` executable?
+    
+    0x0000000000400e6a <+122>:   retq
+    this is the return instruction in getbuf
+    
+b.  What part of your exploit string (described as a byte offset from
+    the start of the string) causes the instruction from (a) to behave
+    differently than normal?  Why?  (Write a sentence or two.)
+    
+    The last 8 bytes of my exploit string causes the instruction from (a) 
+    to behave abnormally because it's going to change the sequential logic 
+    of the program by jumping directly to the first assembly code of smoke().
+    So it's not going to the correct return address like it'd normally do. 
+    
+c.  What instruction executes next after the instruction in (a) in a
+    normal execution? Give the instruction's address and assembly code.
+    
+    0x0000000000401013 <+35>:    cmp    $0x28,%rax
+    
+d.  What instruction executes next after the instruction in (a) in
+    your exploited execution? Give the instruction's address and
+    assembly code.
+    
+    0x0000000000400f20 <+0>:     sub    $0x8,%rsp
+    
+
+EXPLOIT 2:
+
+a.  The retq instruction in getbuf uses one word of your exploit
+    string as a return address. Describe how each subsequent word of
+    the exploit string is interpreted by fizz, including how it finds
+    your cookie as `val`, and why each of these words must be at its
+    position to allow fizz to make this interpretation.
+    
+    The 57th to 64th byte of the exploit string are the address of 
+    the first instruction of fizz. The stack pointer rsp is moved down
+    (sub    $0x8,%rsp) and is pointing to the stack frame of fizz. 8 bytes
+    above that is the return address of fizz, and finally, the 8 bytes above
+    the return address stores the 7th parameter of fizz. 
+    
+b.  What instruction in `fizz` finds the value of the `val` argument?
+    Give the instruction's address and assembly code.
+    
+    0x0000000000400f5e <+14>:    mov    0x10(%rsp),%rsi
+    
+c.  Where does the instruction from (b) find `val` relative to the top
+    of the call stack?  (Give a byte offset.)
+    
+    16 bytes
+    
+
+EXPLOIT 3:
+
+a.  Starting with (including) the `ret` instruction in `getbuf`, list
+    the sequence of instructions that the computer executes under your
+    exploit up through (including) the first instruction in
+    `bang`. For each instruction, list the instruction address and its
+    assembly code.
+
+    paste the code and explain it in b 
+    0x0000000000400e6a:   retq              #return instruction in getbuf 
+    0x7fffffffbbb0:       movabs $0x667aff3343fefaa8,%rsi
+    0x7fffffffbbba:       mov    %rsi,0x602128
+    0x7fffffffbbc2:       pushq  $0x400fa0
+    0x7fffffffbbc7:       retq  
+    0x0000000000400fa0:   sub    $0x8,%rsp    #first instruction in bang
+
+b.  Describe how the instruction sequence in (a) changes memory
+    contents, register contents, and program counter (i.e.,
+    `%rip`). Write a couple/few sentences or annotate your listing
+    above.
+    
+    The ret instruction in getbuf pops return address into the
+    instruction pointer and then it starts executing the instructions
+    on the stack (exploit code). The exploit code sets the global_value 
+    to cookie and jumps to the first instruction in bang by pushing the 
+    address of the first instruction of bang onto the stack. 
+    
+    
+
+EXPLOIT 4:
+
+Besides the primary behavior of providing a "modified" return value, a
+successful exploit for this part must also take care to "cover its
+tracks" and avoid corruption that could cause segmentation faults or
+other unexpected behavior in the remainder of the computation in
+`test` and its callers after the exploit causes this "modified" return
+from `getbuf`.
+
+Explain in detail how your exploit works and avoids the potential
+corruption, including:
+
+a.  How is the potential corruption related to register saving
+    conventions and the `leaveq` instruction?
+
+    The leaveq instruction will move what's stored in rbp into rsp
+    and pop rbp off the stack. The exploit string would corrupt the
+    values stored on the stack and once it returns to test, stack 
+    corruption would be detected by the program. 
+    
+b.  Which register or memory location would hold a corrupted value
+    after execution of your exploit code if your exploit did not
+    "cover its tracks?"
+
+    rbp 
+
+c.  What instruction(s) (with address) in `getbuf` would place a
+    correct value in that register or memory location under normal
+    execution, but would instead place the corrupt value there under
+    an exploit that does not "cover its tracks?"
+
+    0x0000000000400ff6 <+6>:     mov    %rsp,%rbp
+
+d.  Which instruction (with address) in `test` could first raise a
+    segmentation fault (or lead to other data corruption) when using
+    the corrupt value from that register or memory location?
+
+    0x0000000000401019 <+41>:    mov    -0x18(%rbp),%rbx
+
+e.  How does your exploit "covers its tracks" to avoid this corruption?
+
+    My exploit string covers the corruptions by returning to the correct
+    address in getbuf after the exploit and having the second to last
+    8 bytes be the actual value rbp stores before getbuf() is called. 
+    This can be achieved by setting a breakpoint at getbuf() and execute
+    "info reg rbp", so we know that the original value rbp stores is 
+    0x7fffffffbc10. So that later in test when we compare the variable
+    local to 0xdeadbeef, they will be equivalent because we have covered up
+    the corruptions we made in the stack. 
+

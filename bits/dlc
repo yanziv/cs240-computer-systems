@@ -1,0 +1,8 @@
+#!/bin/bash
+# Get the base directory of this script.
+BASE=$(dirname $0)
+# Execute the right version (64-bit or 32-bit) based on OS type.
+case $(uname -m) in
+     x86_64) exec $BASE/dlc64 $@;;
+    *) exec $BASE/dlc32 $@;;
+esac

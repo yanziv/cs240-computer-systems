@@ -1,0 +1,7 @@
+# ignore Emacs backups
+*~
+\#*\#
+.\#*
+.DS_Store
+.nfs*
+.vscode

@@ -1,0 +1,12 @@
+*.o
+*.dSYM
+*~
+\#*\#
+.\#*
+.DS_Store
+.nfs*
+.vscode
+vgcore.*
+connectfour
+list
+*.bin

@@ -1,0 +1,6 @@
+[
+    {
+        "prompt": "About how many hours did you spend actively working on this assignment?",
+        "type": "float"
+    }
+]

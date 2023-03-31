@@ -1,0 +1,11 @@
+*~
+\#*
+.\#*
+*.o
+*.opt
+mdriver
+mdriver-realloc
+.DS_Store
+.nfs*
+.vscode
+*.bin

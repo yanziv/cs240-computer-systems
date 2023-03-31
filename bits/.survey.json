@@ -1,0 +1,18 @@
+[
+    {
+        "prompt": "About how many hours did you spend actively working on this assignment?",
+        "type": "float"
+    },
+    {
+        "prompt": "Which puzzle functions took the longest for you?",
+        "type": "str"
+    },
+    {
+        "prompt": "Which puzzle functions were easiest for you?",
+        "type": "str"
+    },
+    {
+        "prompt": "What resources or preparation were most useful for you?",
+        "type": "str"
+    }
+]
